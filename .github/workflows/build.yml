@@ -27,7 +27,7 @@ jobs:
       - uses: actions/checkout@v7
       - uses: actions/setup-go@v5
         with: {go-version-file: "app/server/go.mod"}
-      - uses: mengzhuo/setup-fnpack@f418f8e6e855be728de40765122d113042f50ed2
+      - uses: mengzhuo/setup-fnpack@v1
 
       - name: set version
         id: ver
