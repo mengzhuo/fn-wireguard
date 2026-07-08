@@ -42,7 +42,7 @@ jobs:
           fnpack build -d .
           mv fn-wireguard.fpk "fn-wireguard_${{ github.ref_name }}_${{ matrix.arch }}.fpk"
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v5
         with:
           name: fn-wireguard-${{ matrix.arch }}
           path: fn-wireguard_*_${{ matrix.arch }}.fpk
@@ -53,7 +53,7 @@ jobs:
     permissions:
       contents: write
     steps:
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v5
         with: {pattern: "fn-wireguard-*", merge-multiple: true}
 
       - name: create release

@@ -57,7 +57,7 @@ jobs:
           fnpack build -d .
           mv fn-wireguard.fpk "fn-wireguard_${{ steps.ver.outputs.version }}_${{ matrix.arch }}.fpk"
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v5
         with:
           name: fn-wireguard-${{ matrix.arch }}
           path: fn-wireguard_*_${{ matrix.arch }}.fpk
