@@ -12,7 +12,9 @@ jobs:
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-go@v5
-        with: {go-version-file: "app/server/go.mod"}
+        with:
+          go-version-file: "app/server/go.mod"
+          cache-dependency-path: "app/server/go.sum"
       - name: test
         working-directory: app/server
         run: go test ./... -v
@@ -26,7 +28,9 @@ jobs:
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-go@v5
-        with: {go-version-file: "app/server/go.mod"}
+        with:
+          go-version-file: "app/server/go.mod"
+          cache-dependency-path: "app/server/go.sum"
       - uses: mengzhuo/setup-fnpack@v1
 
       - name: set version
