@@ -1,0 +1,62 @@
+name: release
+
+on:
+  push:
+    tags: ["v*"]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        arch: [amd64, arm64]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with: {go-version: "1.22"}
+      - uses: mengzhuo/setup-fnpack@v1
+
+      - name: override version from tag
+        run: |
+          TAG="${{ github.ref_name }}"
+          VERSION="${TAG#v}"
+          sed -i "s/^version.*/version               = ${VERSION}/" manifest
+
+      - name: build binary (${{ matrix.arch }})
+        working-directory: app/server
+        run: |
+          CGO_ENABLED=0 GOOS=linux GOARCH=${{ matrix.arch }} go build -ldflags="-s -w" -o ../../app/wireguard-ui .
+
+      - name: set platform in manifest
+        run: |
+          if [ "${{ matrix.arch }}" = "amd64" ]; then
+            sed -i 's/^platform.*/platform              = x86/' manifest
+          else
+            sed -i 's/^platform.*/platform              = arm/' manifest
+          fi
+
+      - name: package fpk
+        run: |
+          fnpack build -d .
+          mv fn-wireguard.fpk "fn-wireguard_${{ github.ref_name }}_${{ matrix.arch }}.fpk"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: fn-wireguard-${{ matrix.arch }}
+          path: fn-wireguard_*_${{ matrix.arch }}.fpk
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with: {pattern: "fn-wireguard-*", merge-multiple: true}
+
+      - name: create release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: ${{ github.ref_name }}
+          files: "*.fpk"
+          generate_release_notes: true

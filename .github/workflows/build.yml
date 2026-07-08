@@ -1,0 +1,59 @@
+name: build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with: {go-version: "1.22"}
+      - name: test
+        working-directory: app/server
+        run: go test ./... -v
+
+  build:
+    needs: test
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        arch: [amd64, arm64]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with: {go-version: "1.22"}
+      - uses: mengzhuo/setup-fnpack@v1
+
+      - name: set version
+        id: ver
+        run: |
+          VERSION=$(grep '^version' manifest | awk -F= '{print $2}' | tr -d ' ')
+          echo "version=${VERSION:-1.0.0}" >> $GITHUB_OUTPUT
+
+      - name: build binary (${{ matrix.arch }})
+        working-directory: app/server
+        run: |
+          CGO_ENABLED=0 GOOS=linux GOARCH=${{ matrix.arch }} go build -ldflags="-s -w" -o ../../app/wireguard-ui .
+
+      - name: set platform in manifest
+        run: |
+          if [ "${{ matrix.arch }}" = "amd64" ]; then
+            sed -i 's/^platform.*/platform              = x86/' manifest
+          else
+            sed -i 's/^platform.*/platform              = arm/' manifest
+          fi
+
+      - name: package fpk
+        run: |
+          fnpack build -d .
+          mv fn-wireguard.fpk "fn-wireguard_${{ steps.ver.outputs.version }}_${{ matrix.arch }}.fpk"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: fn-wireguard-${{ matrix.arch }}
+          path: fn-wireguard_*_${{ matrix.arch }}.fpk

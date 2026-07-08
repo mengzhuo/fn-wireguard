@@ -1,0 +1,23 @@
+#!/bin/bash
+
+if [ ! -f "${TRIM_PKGVAR}/state.json" ]; then
+    echo "State file missing after upgrade. Creating default state."
+    cat > "${TRIM_PKGVAR}/state.json" <<'STATE'
+{
+  "interface": {
+    "address": "10.0.0.1/24",
+    "listenPort": 51820,
+    "privateKey": "",
+    "dns": "",
+    "mtu": 1420,
+    "postUp": "",
+    "postDown": ""
+  },
+  "peers": []
+}
+STATE
+fi
+
+echo "$(date '+%Y-%m-%d %H:%M:%S') - UPGRADE: from ${TRIM_OLD_APPVER} to ${TRIM_APPVER}" >> "${TRIM_PKGVAR}/info.log"
+
+exit 0

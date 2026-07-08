@@ -1,0 +1,5 @@
+#!/bin/bash
+
+rm -f "${TRIM_PKGVAR}/app.pid" "${TRIM_PKGVAR}/state.json" "${TRIM_PKGETC}/wg0.conf"
+
+exit 0

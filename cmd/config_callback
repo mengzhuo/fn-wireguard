@@ -1,0 +1,5 @@
+#!/bin/bash
+
+echo "$(date '+%Y-%m-%d %H:%M:%S') - CONFIG_CALLBACK: config change applied" >> "${TRIM_PKGVAR}/info.log"
+
+exit 0

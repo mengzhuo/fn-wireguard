@@ -1,0 +1,5 @@
+build/
+app/wireguard-ui
+app/server/wireguard-ui
+**/.DS_Store
+*.fpk

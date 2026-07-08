@@ -1,0 +1,12 @@
+appname               = fn-wireguard
+version               = 1.0.0
+display_name          = WireGuard
+desc                  = WireGuard VPN management interface. Add peers, generate configs, monitor traffic.
+platform              = x86
+source                = thirdparty
+maintainer            = mengzhuo
+distributor           = mengzhuo
+os_min_version        = 1.0.0
+ctl_stop              = true
+desktop_uidir         = ui
+desktop_applaunchname = fn-wireguard.Application

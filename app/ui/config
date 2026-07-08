@@ -1,0 +1,17 @@
+{
+  ".url": {
+    "fn-wireguard.Application": {
+      "title": "WireGuard",
+      "icon": "images/icon_{0}.png",
+      "type": "iframe",
+      "protocol": "",
+      "gatewayPrefix": "/app/fn-wireguard",
+      "gatewaySocket": "app.sock",
+      "url": "/app/fn-wireguard",
+      "allUsers": false,
+      "control": {
+        "accessPerm": "readonly"
+      }
+    }
+  }
+}

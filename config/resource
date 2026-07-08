@@ -1,0 +1,12 @@
+{
+  "data-share": {
+    "shares": [
+      {
+        "name": "fn-wireguard"
+      },
+      {
+        "name": "fn-wireguard/data"
+      }
+    ]
+  }
+}

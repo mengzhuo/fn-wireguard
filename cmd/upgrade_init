@@ -1,0 +1,15 @@
+#!/bin/bash
+
+if command -v wg >/dev/null 2>&1; then
+    wg-quick down wg0 2>/dev/null
+fi
+
+if [ -f "${TRIM_PKGVAR}/app.pid" ]; then
+    pid=$(head -n 1 "${TRIM_PKGVAR}/app.pid" | tr -d '[:space:]')
+    kill -TERM "${pid}" 2>/dev/null
+    sleep 2
+    kill -KILL "${pid}" 2>/dev/null
+    rm -f "${TRIM_PKGVAR}/app.pid"
+fi
+
+exit 0
