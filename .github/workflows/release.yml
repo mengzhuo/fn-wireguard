@@ -5,7 +5,20 @@ on:
     tags: ["v*"]
 
 jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-go@v6
+        with:
+          go-version-file: "app/server/go.mod"
+          cache-dependency-path: "app/server/go.sum"
+      - name: test
+        working-directory: app/server
+        run: go test ./... -v
+
   build:
+    needs: test
     runs-on: ubuntu-latest
     strategy:
       matrix:
